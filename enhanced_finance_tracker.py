@@ -77,5 +77,5 @@ def main():
     module = importlib.import_module(f'{module_name.replace(".py", "")}')
     module.main()
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     main()
