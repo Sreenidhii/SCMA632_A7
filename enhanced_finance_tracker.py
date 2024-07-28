@@ -64,6 +64,16 @@ def main():
         "Historical Data",
         "Export Data"
     ])
+
+    PAGES = {
+    "Enhanced Finance Tracker": "enhanced_finance_tracker",
+    "Home": "home",
+    "Budget Overview": "budget_overview",
+    "Historical Data": "historical_data",
+    "Export Data": "export_data"
+    }
+
+
     
     module_name = PAGES[selection]
     module = importlib.import_module(f'{module_name.replace(".py", "")}')
