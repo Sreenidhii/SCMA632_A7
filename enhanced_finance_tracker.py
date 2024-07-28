@@ -1,5 +1,3 @@
-# File: enhanced_finance_tracker.py
-
 import streamlit as st
 import importlib
 from auth import authenticate, create_user
@@ -34,28 +32,18 @@ def main():
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
         
-        if st.button("Login"):
-            if authenticate(username, password):
-                st.session_state.logged_in = True
-                st.session_state.username = username
-                st.success("Logged in successfully!")
-                st.session_state['refresh'] = True  # Manually handle the refresh logic
-            else:
-                st.error("Invalid username or password")
-
-        if st.button("Create Account"):
+        if st.button("Create Account", key="create_account_button"):
             if create_user(username, password):
                 st.success("Account created successfully!")
             else:
                 st.error("User already exists or invalid password")
         return
 
-    if st.button('Logout'):
+    if st.button('Logout', key="logout_button"):
         st.session_state.pop('username', None)
         st.session_state.pop('logged_in', None)
-        st.session_state['refresh'] = True  # Manually handle the refresh logic
+        st.experimental_rerun()  # Refresh the page
 
-    
     # Create sidebar for page navigation
     selection = st.sidebar.radio("Go to", [
         "Enhanced Finance Tracker",
@@ -64,21 +52,19 @@ def main():
         "Historical Data",
         "Export Data"
     ])
-
+    
     PAGES = {
     "Enhanced Finance Tracker": "enhanced_finance_tracker",
     "Home": "home",
     "Budget Overview": "budget_overview",
     "Historical Data": "historical_data",
     "Export Data": "export_data"
-    }
+}
 
 
-    
     module_name = PAGES[selection]
     module = importlib.import_module(f'{module_name.replace(".py", "")}')
     module.main()
 
 if __name__ == "__main__":
     main()
-
