@@ -26,34 +26,32 @@ def main():
 
     st.title("Enhanced Finance Tracker")
     st.subheader("Empowering Your Financial Journey with Clarity and Control")
-    
+
     if 'logged_in' not in st.session_state or not st.session_state['logged_in']:
         st.header("Please Log In")
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
-        
-        if st.button("Login"):
+
+        if st.button("Login", key="login_button"):
             if authenticate(username, password):
                 st.session_state.logged_in = True
                 st.session_state.username = username
                 st.success("Logged in successfully!")
-                st.session_state['refresh'] = True  # Manually handle the refresh logic
+                st.experimental_rerun()  # Refresh the page
             else:
                 st.error("Invalid username or password")
 
-        if st.button("Create Account"):
+        if st.button("Create Account", key="create_account_button"):
             if create_user(username, password):
                 st.success("Account created successfully!")
             else:
                 st.error("User already exists or invalid password")
         return
 
-    if st.button('Logout'):
+    if st.button('Logout', key="logout_button"):
         st.session_state.pop('username', None)
         st.session_state.pop('logged_in', None)
-        st.session_state['refresh'] = True  # Manually handle the refresh logic
-
-    
+        st.experimental_rerun()  # Refresh the page
 
     # Create sidebar for page navigation
     selection = st.sidebar.radio("Go to", [
@@ -63,7 +61,8 @@ def main():
         "Historical Data",
         "Export Data"
     ])
-    
+
+    # Map page names to module paths
     PAGES = {
     "Enhanced Finance Tracker": "enhanced_finance_tracker",
     "Home": "home",
@@ -72,10 +71,20 @@ def main():
     "Export Data": "export_data"
 }
 
-
-    module_name = PAGES[selection]
-    module = importlib.import_module(f'{module_name.replace(".py", "")}')
-    module.main()
+    module_name = PAGES.get(selection)
+    if module_name:
+        try:
+            module = importlib.import_module(module_name)
+            if hasattr(module, 'main'):
+                module.main()
+            else:
+                st.error(f"Module {module_name} does not have a 'main' function.")
+        except ModuleNotFoundError as e:
+            st.error(f"ModuleNotFoundError: {e}")
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
+    else:
+        st.error("Page not found")
 
 if __name__ == "__main__":
     main()
