@@ -3,7 +3,6 @@
 import streamlit as st
 import importlib
 from auth import authenticate, create_user
-from pages import home
 
 def main():
     # Set background colors and font style for main page and sidebar
@@ -56,15 +55,7 @@ def main():
         st.session_state.pop('logged_in', None)
         st.session_state['refresh'] = True  # Manually handle the refresh logic
 
-    # Define page sequence
-    PAGES = {
-        "Enhanced Finance Tracker": "pages.home",
-        "Home": "pages.home",
-        "Budget Overview": "pages.budget_overview",
-        "Historical Data": "pages.historical_data",
-        "Export Data": "pages.export_data"
-    }
-
+    
     # Create sidebar for page navigation
     selection = st.sidebar.radio("Go to", [
         "Enhanced Finance Tracker",
