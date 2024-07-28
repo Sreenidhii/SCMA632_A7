@@ -2,7 +2,7 @@
 
 import streamlit as st
 import importlib
-from auth import authenticate, create_user
+from auth.auth import authenticate, create_user
 
 def main():
     # Set background colors and font style for main page and sidebar
