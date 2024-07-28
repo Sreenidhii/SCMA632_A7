@@ -32,17 +32,35 @@ def main():
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
         
-        if st.button("Create Account", key="create_account_button"):
+        if st.button("Login"):
+            if authenticate(username, password):
+                st.session_state.logged_in = True
+                st.session_state.username = username
+                st.success("Logged in successfully!")
+                st.session_state['refresh'] = True  # Manually handle the refresh logic
+            else:
+                st.error("Invalid username or password")
+
+        if st.button("Create Account"):
             if create_user(username, password):
                 st.success("Account created successfully!")
             else:
                 st.error("User already exists or invalid password")
         return
 
-    if st.button('Logout', key="logout_button"):
+    if st.button('Logout'):
         st.session_state.pop('username', None)
         st.session_state.pop('logged_in', None)
-        st.experimental_rerun()  # Refresh the page
+        st.session_state['refresh'] = True  # Manually handle the refresh logic
+
+    # Define page sequence
+    PAGES = {
+        "Enhanced Finance Tracker": "pages.home",
+        "Home": "pages.home",
+        "Budget Overview": "pages.budget_overview",
+        "Historical Data": "pages.historical_data",
+        "Export Data": "pages.export_data"
+    }
 
     # Create sidebar for page navigation
     selection = st.sidebar.radio("Go to", [
@@ -53,15 +71,6 @@ def main():
         "Export Data"
     ])
     
-    PAGES = {
-    "Enhanced Finance Tracker": "enhanced_finance_tracker",
-    "Home": "home",
-    "Budget Overview": "budget_overview",
-    "Historical Data": "historical_data",
-    "Export Data": "export_data"
-}
-
-
     module_name = PAGES[selection]
     module = importlib.import_module(f'{module_name.replace(".py", "")}')
     module.main()
