@@ -27,13 +27,14 @@ def main():
     st.title("Enhanced Finance Tracker")
     st.subheader("Empowering Your Financial Journey with Clarity and Control")
 
+    # Initialize session state if not already done
     if 'logged_in' not in st.session_state:
         st.session_state['logged_in'] = False
 
     if not st.session_state['logged_in']:
         st.header("Please Log In")
-        username = st.text_input("Username", key="username_input")
-        password = st.text_input("Password", type="password", key="password_input")
+        username = st.text_input("Username", key="login_username_input")
+        password = st.text_input("Password", type="password", key="login_password_input")
 
         if st.button("Login", key="login_button"):
             if authenticate(username, password):
@@ -49,7 +50,7 @@ def main():
             else:
                 st.error("User already exists or invalid password")
     else:
-        if st.button('Logout', key="logout_button"):
+        if st.button('Logout', key=f"logout_button_{st.session_state.username}"):
             st.session_state['logged_in'] = False
             st.session_state.pop('username', None)
             st.success("Logged out successfully!")
