@@ -32,8 +32,8 @@ def main():
 
     if not st.session_state['logged_in']:
         st.header("Please Log In")
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
+        username = st.text_input("Username", key="username_input")
+        password = st.text_input("Password", type="password", key="password_input")
 
         if st.button("Login", key="login_button"):
             if authenticate(username, password):
@@ -61,7 +61,7 @@ def main():
             "Budget Overview",
             "Historical Data",
             "Export Data"
-        ])
+        ], key="sidebar_radio")
 
         PAGES = {
             "Enhanced Finance Tracker": "enhanced_finance_tracker",
