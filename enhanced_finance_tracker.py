@@ -53,14 +53,7 @@ def main():
         st.session_state.pop('logged_in', None)
         st.session_state['refresh'] = True  # Manually handle the refresh logic
 
-    # Define page sequence
-    PAGES = {
-        "Enhanced Finance Tracker": "pages.home",
-        "Home": "pages.home",
-        "Budget Overview": "pages.budget_overview",
-        "Historical Data": "pages.historical_data",
-        "Export Data": "pages.export_data"
-    }
+    
 
     # Create sidebar for page navigation
     selection = st.sidebar.radio("Go to", [
@@ -71,6 +64,15 @@ def main():
         "Export Data"
     ])
     
+    PAGES = {
+    "Enhanced Finance Tracker": "enhanced_finance_tracker",
+    "Home": "home",
+    "Budget Overview": "budget_overview",
+    "Historical Data": "historical_data",
+    "Export Data": "export_data"
+}
+
+
     module_name = PAGES[selection]
     module = importlib.import_module(f'{module_name.replace(".py", "")}')
     module.main()
