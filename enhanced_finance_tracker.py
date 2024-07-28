@@ -27,6 +27,7 @@ def main():
     )
 
     st.title("Enhanced Finance Tracker")
+    st.subheader("Empowering Your Financial Journey with Clarity and Control")
     
     if 'logged_in' not in st.session_state or not st.session_state['logged_in']:
         st.header("Please Log In")
@@ -38,6 +39,7 @@ def main():
                 st.session_state.logged_in = True
                 st.session_state.username = username
                 st.success("Logged in successfully!")
+                st.session_state['refresh'] = True  # Manually handle the refresh logic
             else:
                 st.error("Invalid username or password")
 
@@ -51,7 +53,7 @@ def main():
     if st.button('Logout'):
         st.session_state.pop('username', None)
         st.session_state.pop('logged_in', None)
-        st.experimental_rerun()
+        st.session_state['refresh'] = True  # Manually handle the refresh logic
 
     # Define page sequence
     PAGES = {
@@ -77,3 +79,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
