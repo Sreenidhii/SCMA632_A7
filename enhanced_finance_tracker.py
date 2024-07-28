@@ -27,7 +27,10 @@ def main():
     st.title("Enhanced Finance Tracker")
     st.subheader("Empowering Your Financial Journey with Clarity and Control")
 
-    if 'logged_in' not in st.session_state or not st.session_state['logged_in']:
+    if 'logged_in' not in st.session_state:
+        st.session_state['logged_in'] = False
+
+    if not st.session_state['logged_in']:
         st.header("Please Log In")
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
@@ -37,7 +40,6 @@ def main():
                 st.session_state.logged_in = True
                 st.session_state.username = username
                 st.success("Logged in successfully!")
-                st.experimental_rerun()  # Use to refresh the page
             else:
                 st.error("Invalid username or password")
 
@@ -46,39 +48,38 @@ def main():
                 st.success("Account created successfully!")
             else:
                 st.error("User already exists or invalid password")
-        return
-
-    if st.button('Logout', key="logout_button"):
-        st.session_state.pop('username', None)
-        st.session_state.pop('logged_in', None)
-        st.experimental_rerun()  # Use to refresh the page
-
-    # Create sidebar for page navigation
-    selection = st.sidebar.radio("Go to", [
-        "Enhanced Finance Tracker",
-        "Home",
-        "Budget Overview",
-        "Historical Data",
-        "Export Data"
-    ])
-
-    PAGES = {
-        "Enhanced Finance Tracker": "enhanced_finance_tracker",
-        "Home": "home",
-        "Budget Overview": "budget_overview",
-        "Historical Data": "historical_data",
-        "Export Data": "export_data"
-    }
-
-    module_name = PAGES.get(selection)
-    if module_name:
-        module = importlib.import_module(f'{module_name}')
-        if hasattr(module, 'main'):
-            module.main()
-        else:
-            st.error(f"Module {module_name} does not have a 'main' function.")
     else:
-        st.error("Page not found")
+        if st.button('Logout', key="logout_button"):
+            st.session_state['logged_in'] = False
+            st.session_state.pop('username', None)
+            st.success("Logged out successfully!")
+
+        # Create sidebar for page navigation
+        selection = st.sidebar.radio("Go to", [
+            "Enhanced Finance Tracker",
+            "Home",
+            "Budget Overview",
+            "Historical Data",
+            "Export Data"
+        ])
+
+        PAGES = {
+            "Enhanced Finance Tracker": "enhanced_finance_tracker",
+            "Home": "home",
+            "Budget Overview": "budget_overview",
+            "Historical Data": "historical_data",
+            "Export Data": "export_data"
+        }
+
+        module_name = PAGES.get(selection)
+        if module_name:
+            module = importlib.import_module(f'{module_name}')
+            if hasattr(module, 'main'):
+                module.main()
+            else:
+                st.error(f"Module {module_name} does not have a 'main' function.")
+        else:
+            st.error("Page not found")
 
 if __name__ == "__main__":
     main()
